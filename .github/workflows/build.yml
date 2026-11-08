@@ -1,37 +1,49 @@
 name: Build APK
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-22.04
+    timeout-minutes: 90
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-    - name: Set up Python
+    - name: Set up Python 3.11
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
-    - name: Install dependencies
+    - name: Install system packages
       run: |
+        sudo dpkg --add-architecture i386
         sudo apt update
-        sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev libltdl-dev
+        sudo apt install -y \
+          git zip unzip openjdk-17-jdk python3-pip \
+          autoconf libtool pkg-config zlib1g-dev \
+          libncurses5-dev libncursesw5-dev libtinfo5 \
+          cmake libffi-dev libssl-dev libltdl-dev \
+          libstdc++6:i386 libgcc1:i386 zlib1g:i386
 
-    - name: Install Buildozer
+    - name: Install Python packages
       run: |
         pip install --upgrade pip
         pip install buildozer==1.5.0 cython==0.29.36
 
-    - name: Build APK
-      run: buildozer -v android debug
+    - name: Buildozer android debug
+      run: |
+        buildozer -v android debug
+      env:
+        BUILDOZER_WARN_ON_ROOT: "0"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: OknoSmet-APK
         path: bin/*.apk
+        if-no-files-found: error
