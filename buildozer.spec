@@ -37,6 +37,7 @@ android.permissions =
 # Минимальная и целевая версия Android
 android.minapi = 24
 android.api = 33
+android.accept_sdk_license = True
 android.ndk_api = 24
 
 # Архитектуры (современные телефоны)
