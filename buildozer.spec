@@ -39,9 +39,10 @@ android.minapi = 24
 android.api = 33
 android.accept_sdk_license = True
 android.ndk_api = 24
+android.ndk = 23b
 
 # Архитектуры (современные телефоны)
-android.archs = arm64-v8a, armeabi-v7a
+android.archs = arm64-v8a
 
 # Не оставлять отладочные символы
 android.add_jars = 
